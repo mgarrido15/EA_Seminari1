@@ -87,6 +87,9 @@ console.log(typeof greet, greet('Alice')); // function "Hi, I'm Alice"
 const greetArrow = (name) => `Hi, I'm ${name}`;
 console.log(typeof greetArrow, greetArrow('Alice')); // function "Hi, I'm Alice"
 
+const suma = (a,b) => a+b;
+console.log(suma(2,4));
+
 
 // Date (handling time & date)
 let today = new Date();

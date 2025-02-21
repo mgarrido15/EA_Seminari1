@@ -1,6 +1,6 @@
 console.log("Inicio");
 
-// Función para obtener un usuario de una API
+
 function getUser(userId) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
     .then(response => {
@@ -9,7 +9,7 @@ function getUser(userId) {
     });
 }
 
-// Función para obtener los posts de un usuario
+
 function getPosts(userId) {
   return fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
     .then(response => {
@@ -18,7 +18,7 @@ function getPosts(userId) {
     });
 }
 
-// Función para obtener los comentarios del post
+
 function getComments(postId) {
   return fetch(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
     .then(response => {
@@ -29,21 +29,28 @@ function getComments(postId) {
 
 async function fetchOrderDetails() {
   try {
-    const user = await getUser(1);
-    const posts = await getPosts(user.id);
-    const comments = await getComments(posts[0].id);
-
-    console.log("Comentarios del primer post:", comments);
-    console.log("Fin");
+    const user = await getUser(2);
     console.log(user);
-  } catch (error) {
+    const posts = await getPosts(user.id);
+    const commentsPromise = posts.map(post => getComments(post.id));
+    const comments = await Promise.all(commentsPromise);
+    // comments.forEach((comments, index) => {
+    //   console.log(`Comentarios del post ${posts[index].id}:`, comments);
+    // });
+
+    const orderedComments = comments.flat().map((comment) => ({
+      ...comment,
+      type: "Comment"
+    })).filter((comment) => comment.id >= 50).sort((a,b) => b.id - a.id);
+
+    orderedComments.forEach((comments) => {
+      console.log(`Comentario ${comments.id}:`, comments);
+    });
+  }
+   catch (error) {
     console.error("Error:", error);
   }
 }
 
-console.log("Inicio");
 
 fetchOrderDetails();
-
-
-
